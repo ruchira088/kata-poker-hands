@@ -53,7 +53,7 @@ object WinningCards
   def twoOfAKind(cards: List[Card]): Option[List[Card]] = nOfAKind(2)(cards)
 
   def isStraight(cards: List[Card]): Option[List[Card]] = cards.sortBy(_.value).reverse match {
-    case x :: y :: rest => if (x.value.value - y.value.value == 1) isStraight(y :: rest).map(x :: _) else None
+    case x :: y :: rest => if (x.value.intValue - y.value.intValue == 1) isStraight(y :: rest).map(x :: _) else None
     case x => Some(x)
   }
 
