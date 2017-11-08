@@ -1,4 +1,4 @@
-import cards.Card
+import cards.{Ace, Card, Two}
 
 object WinningCards
 {
@@ -15,7 +15,7 @@ object WinningCards
       cardsList.sortBy(_.value) ++ orderedRemainingCards(cardsList)
 
     isStraightFlush(cards).map(straightFlush =>
-      pokerHandSummaryCreator(List(straightFlush.head), StraightFlush, "")
+      pokerHandSummaryCreator(List(straightFlush.tail.head), StraightFlush, "")
     )
       .orElse(fourOfAKind(cards).map(fourOfAKind =>
         pokerHandSummaryCreator(List(fourOfAKind.head), FourOfAKind, "")))
@@ -25,7 +25,7 @@ object WinningCards
       .orElse(getFlush(cards).map(flushCards =>
         pokerHandSummaryCreator(createComparisonOrder(flushCards), Flush, "")))
       .orElse(isStraight(cards).map(straightCards =>
-        pokerHandSummaryCreator(List(straightCards.head), Straight, "")))
+        pokerHandSummaryCreator(List(straightCards.tail.head), Straight, "")))
       .orElse(threeOfAKind(cards).map(threeCards =>
         pokerHandSummaryCreator(List(threeCards.head), ThreeOfAKind, "")))
       .orElse(twoPair(cards).map(twoPairCards =>
@@ -69,7 +69,7 @@ object WinningCards
     } yield List(pair, otherPair)
 
   private def isStraight(cards: List[Card]): Option[List[Card]] = cards.sortBy(_.value).reverse match {
-      case x :: y :: rest => if (x.value.intValue - y.value.intValue == 1) isStraight(y :: rest).map(x :: _) else None
+      case x :: y :: rest => if (x.value.intValue - y.value.intValue == 1 || (x.value == Ace && rest.last.value == Two)) isStraight(y :: rest).map(x :: _) else None
       case x => Some(x)
     }
 
