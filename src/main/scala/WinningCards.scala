@@ -60,18 +60,18 @@ object WinningCards
 
   private def threeOfAKind(cards: List[Card]): Option[List[Card]] = nOfAKind(3)(cards)
 
+  private def twoOfAKind(cards: List[Card]): Option[List[Card]] = nOfAKind(2)(cards)
+
   private def twoPair(cards: List[Card]): Option[List[List[Card]]] = for
     {
       pair <- twoOfAKind(cards)
       otherPair <- twoOfAKind(cards.diff(pair))
     } yield List(pair, otherPair)
 
-  private def twoOfAKind(cards: List[Card]): Option[List[Card]] = nOfAKind(2)(cards)
-
   private def isStraight(cards: List[Card]): Option[List[Card]] = cards.sortBy(_.value).reverse match {
-    case x :: y :: rest => if (x.value.intValue - y.value.intValue == 1) isStraight(y :: rest).map(x :: _) else None
-    case x => Some(x)
-  }
+      case x :: y :: rest => if (x.value.intValue - y.value.intValue == 1) isStraight(y :: rest).map(x :: _) else None
+      case x => Some(x)
+    }
 
   private def isFullHouse(cards: List[Card]): Option[List[List[Card]]] = for
     {
