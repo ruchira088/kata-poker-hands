@@ -1,4 +1,4 @@
-import cards.{CardSuite, CardValue}
+import cards.{Card, CardSuite, CardValue}
 
 import scala.concurrent.Await
 import scala.concurrent.duration._
@@ -8,6 +8,10 @@ object TestApp
 {
   def main(args: Array[String]): Unit =
   {
-    println(CardValue.parseCardValue("10"))
+    for {
+      pokerGame <- InputParser.parseLine("Black: 2H 4S 4C 4D 4H  White: 2S 8S AS QS 3S")
+      _ = println(WinningCards(pokerGame.player_1.pokerHand))
+    } yield true
+
   }
 }
