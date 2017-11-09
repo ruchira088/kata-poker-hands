@@ -1,5 +1,6 @@
 package poker.hand
 
+import poker.cards.Card._
 import poker.cards.{Ace, Card, Two}
 
 object HighestRankingCards
@@ -17,24 +18,27 @@ object HighestRankingCards
       cardsList.sorted ++ orderedRemainingCards(cardsList)
 
     getStraightFlush(cards).map(straightFlush =>
-      pokerHandSummaryCreator(List(straightFlush.tail.head), StraightFlush, "")
+      pokerHandSummaryCreator(List(straightFlush.tail.head), StraightFlush, s"Straight flush: ${printCards(straightFlush)}")
     )
       .orElse(fourOfAKind(cards).map(fourOfAKind =>
-        pokerHandSummaryCreator(List(fourOfAKind.head), FourOfAKind, "")))
-      .orElse(getFullHouse(cards).map { case threes :: _ =>
-        pokerHandSummaryCreator(List(threes.head), FullHouse, "")
+        pokerHandSummaryCreator(List(fourOfAKind.head), FourOfAKind, s"Four of a kind: ${printCards(fourOfAKind)}")))
+      .orElse(getFullHouse(cards).map { case threes :: twos :: Nil =>
+        pokerHandSummaryCreator(List(threes.head), FullHouse, s"Full house: ${printCards(threes)} ${printCards(twos)}")
       })
       .orElse(getFlush(cards).map(flushCards =>
-        pokerHandSummaryCreator(createComparisonOrder(flushCards), Flush, "")))
+        pokerHandSummaryCreator(createComparisonOrder(flushCards), Flush, s"Flush: ${printCards(flushCards.sorted)}")))
       .orElse(getStraight(cards).map(straightCards =>
-        pokerHandSummaryCreator(List(straightCards.tail.head), Straight, "")))
+        pokerHandSummaryCreator(List(straightCards.tail.head), Straight, s"Straight: ${printCards(straightCards)}")))
       .orElse(threeOfAKind(cards).map(threeCards =>
-        pokerHandSummaryCreator(List(threeCards.head), ThreeOfAKind, "")))
-      .orElse(twoPair(cards).map(twoPairCards =>
-        pokerHandSummaryCreator(createComparisonOrder(twoPairCards.flatten), TwoPair, "")))
+        pokerHandSummaryCreator(List(threeCards.head), ThreeOfAKind, s"Three of a kind: ${printCards(threeCards)}")))
+      .orElse(twoPair(cards).map {
+        case twoPairCards @ pairOne :: pairTwo :: Nil =>
+          pokerHandSummaryCreator(
+            createComparisonOrder(twoPairCards.flatten), TwoPair, s"Two pair: ${printCards(pairOne)} ${printCards(pairTwo)}")
+      })
       .orElse(twoOfAKind(cards).map(pairCards =>
-        pokerHandSummaryCreator(createComparisonOrder(pairCards), Pair, "")))
-      .getOrElse(pokerHandSummaryCreator(cards.sorted, HighCard, ""))
+        pokerHandSummaryCreator(createComparisonOrder(pairCards), Pair, s"Pair: ${printCards(pairCards)}")))
+      .getOrElse(pokerHandSummaryCreator(cards.sorted, HighCard, s"High card: ${cards.sorted.head}"))
   }
 
 

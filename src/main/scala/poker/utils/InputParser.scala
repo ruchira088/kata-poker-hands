@@ -1,9 +1,7 @@
 package poker.utils
 
-import java.nio.file.{Path, Paths}
-
 import poker.cards.Card
-import poker.exceptions.InputParseException
+import poker.exceptions.{DuplicateCardException, InputParseException}
 import poker.game
 import poker.game.{Player, PokerGame}
 import poker.hand.PokerHand
@@ -22,7 +20,12 @@ object InputParser
           ScalaUtils.sequence(players)
             .fold(
               Failure(_),
-              { case player_1 :: player_2 :: _ => Success(game.PokerGame(player_1, player_2)) }
+              { case player_1 :: player_2 :: _ =>
+                if (player_1.pokerHand.cards.intersect(player_2.pokerHand.cards).isEmpty)
+                  Success(game.PokerGame(player_1, player_2))
+                else
+                  Failure(DuplicateCardException(player_1.pokerHand.cards.intersect(player_2.pokerHand.cards)))
+              }
             )
 
         case _ => Failure(InputParseException(line))

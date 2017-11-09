@@ -2,7 +2,9 @@ package poker.cards
 
 import scala.util.Try
 
-case class Card(suite: CardSuite, value: CardValue)
+case class Card(suite: CardSuite, value: CardValue) {
+  override def toString = s"${value.key}$suite"
+}
 
 object Card
 {
@@ -23,4 +25,6 @@ object Card
     case (Card(_, x) :: _, Card(_, y) :: _) if x != y => x.intValue - y.intValue
     case (_ :: xs, _ :: ys) => compareCardList(xs, ys)
   }
+
+  def printCards(cardsList: List[Card]) = cardsList.mkString("[", ",", "]")
 }
