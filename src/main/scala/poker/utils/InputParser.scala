@@ -3,9 +3,11 @@ package poker.utils
 import poker.cards.Card
 import poker.exceptions.{DuplicateCardException, InputParseException}
 import poker.game
+import poker.game.PokerGame.getWinner
 import poker.game.{Player, PokerGame}
 import poker.hand.PokerHand
 
+import scala.util.control.NonFatal
 import scala.util.{Failure, Success, Try}
 
 object InputParser
@@ -21,10 +23,14 @@ object InputParser
           ScalaUtils.sequence(players).fold(Failure(_),
               {
                 case player_1 :: player_2 :: _ =>
-                  if (player_1.pokerHand.cards.intersect(player_2.pokerHand.cards).isEmpty)
+                {
+                  val commonCards = player_1.pokerHand.cards.intersect(player_2.pokerHand.cards)
+
+                  if (commonCards.isEmpty)
                     Success(game.PokerGame(player_1, player_2))
                   else
-                    Failure(DuplicateCardException(player_1.pokerHand.cards.intersect(player_2.pokerHand.cards)))
+                    Failure(DuplicateCardException(commonCards))
+                }
               }
             )
 
@@ -44,4 +50,12 @@ object InputParser
       pokerHand <- PokerHand.create(cards)
     }
     yield pokerHand
+
+  def parseAndEvaluate(lines: List[String]): Try[List[String]] = ScalaUtils.sequence {
+    lines.map {
+      line => InputParser.parseLine(line)
+        .map(getWinner)
+        .recover { case NonFatal(exception) => exception.getMessage }
+    }
+  }
 }
