@@ -2,6 +2,7 @@ package poker.utils
 
 import poker.exceptions.EmptyOptionException
 
+import scala.concurrent.Future
 import scala.util.{Failure, Success, Try}
 
 object ScalaUtils
@@ -20,4 +21,6 @@ object ScalaUtils
           rest <- sequence(xs)
         } yield value +: rest
     }
+
+  implicit def toFuture[A](tryValue: Try[A]): Future[A] = Future.fromTry(tryValue)
 }
