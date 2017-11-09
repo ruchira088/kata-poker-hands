@@ -17,14 +17,13 @@ object InputParser
     line.split(PLAYER_DELIMITER).toList.map(parsePlayer) match
       {
         case players if players.length == 2 =>
-          ScalaUtils.sequence(players)
-            .fold(
-              Failure(_),
-              { case player_1 :: player_2 :: _ =>
-                if (player_1.pokerHand.cards.intersect(player_2.pokerHand.cards).isEmpty)
-                  Success(game.PokerGame(player_1, player_2))
-                else
-                  Failure(DuplicateCardException(player_1.pokerHand.cards.intersect(player_2.pokerHand.cards)))
+          ScalaUtils.sequence(players).fold(Failure(_),
+              {
+                case player_1 :: player_2 :: _ =>
+                  if (player_1.pokerHand.cards.intersect(player_2.pokerHand.cards).isEmpty)
+                    Success(game.PokerGame(player_1, player_2))
+                  else
+                    Failure(DuplicateCardException(player_1.pokerHand.cards.intersect(player_2.pokerHand.cards)))
               }
             )
 
