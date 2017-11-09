@@ -1,14 +1,17 @@
+package poker.utils
+
 import java.nio.file.{Path, Paths}
 
-import cards.Card
-import exceptions.InputParseException
-import utils.ScalaUtils
+import poker.cards.Card
+import poker.exceptions.InputParseException
+import poker.game
+import poker.game.{Player, PokerGame}
+import poker.hand.PokerHand
 
 import scala.util.{Failure, Success, Try}
 
 object InputParser
 {
-  val INPUT_FILE_PATH: Path = Paths.get("resources/input.txt")
   val PLAYER_DELIMITER = "  "
   val CARD_DELIMITER = " "
 
@@ -19,7 +22,7 @@ object InputParser
           ScalaUtils.sequence(players)
             .fold(
               Failure(_),
-              { case player_1 :: player_2 :: _ => Success(PokerGame(player_1, player_2)) }
+              { case player_1 :: player_2 :: _ => Success(game.PokerGame(player_1, player_2)) }
             )
 
         case _ => Failure(InputParseException(line))

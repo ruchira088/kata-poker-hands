@@ -1,3 +1,5 @@
+package poker.hand
+
 trait PokerHandRanking extends Ordered[PokerHandRanking]
 {
   def rankValue: Int

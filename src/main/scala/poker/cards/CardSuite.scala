@@ -1,10 +1,10 @@
-package cards
+package poker.cards
 
-import exceptions.CardSuiteMappingException
+import poker.exceptions.CardSuiteMappingException
 
 import scala.util.Try
 
-sealed trait CardSuite extends Mapper[CardSuite] {
+sealed trait CardSuite extends StringMapper[CardSuite] {
   cardSuit =>
 
   override def value: CardSuite = cardSuit
@@ -12,10 +12,10 @@ sealed trait CardSuite extends Mapper[CardSuite] {
 
 object CardSuite
 {
-  private lazy val mappings = Mapper.mapping(List(Heart, Spade, Diamond, Club))
+  private lazy val mappings = StringMapper.mapping(List(Heart, Spade, Diamond, Club))
 
   def parseCardSuite(stringValue: String): Try[CardSuite] =
-    Mapper.findValue(mappings)(stringValue, CardSuiteMappingException(stringValue))
+    StringMapper.findValue(mappings)(stringValue, CardSuiteMappingException(stringValue))
 }
 
 case object Heart extends CardSuite {

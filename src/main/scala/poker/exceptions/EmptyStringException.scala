@@ -1,3 +1,3 @@
-package exceptions
+package poker.exceptions
 
 object EmptyStringException extends Exception

@@ -1,6 +1,6 @@
-package utils
+package poker.utils
 
-import exceptions.EmptyOptionException
+import poker.exceptions.EmptyOptionException
 
 import scala.util.{Failure, Success, Try}
 

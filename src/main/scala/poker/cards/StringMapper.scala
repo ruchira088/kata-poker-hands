@@ -1,17 +1,17 @@
-package cards
+package poker.cards
 
 import scala.util.{Failure, Success, Try}
 
-trait Mapper[A]
+trait StringMapper[A]
 {
   def key: String
 
   def value: A
 }
 
-object Mapper
+object StringMapper
 {
-  def mapping[A](list: List[Mapper[A]]): Map[String, A] =
+  def mapping[A](list: List[StringMapper[A]]): Map[String, A] =
     list.foldLeft(Map.empty[String, A]) {
       case (mappings, keyValue) => mappings + (keyValue.key -> keyValue.value)
     }

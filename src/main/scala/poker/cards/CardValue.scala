@@ -1,31 +1,27 @@
-package cards
+package poker.cards
 
-import exceptions.CardValueMappingException
+import poker.exceptions.CardValueMappingException
 
 import scala.util.Try
 
-sealed trait CardValue extends Mapper[CardValue]
+sealed trait CardValue extends StringMapper[CardValue]
 {
   cardValue =>
 
   def intValue: Int
 
-  def toSymbol: String = intValue.toString
-
-  override def key: String = toSymbol
+  override def key: String = intValue.toString
 
   override def value: CardValue = cardValue
 }
 
 object CardValue
 {
-  implicit val cardValueOrdering: Ordering[CardValue] = (x: CardValue, y: CardValue) => x.intValue - y.intValue
-
   private lazy val stringMappings: Map[String, CardValue] =
-    Mapper.mapping(List(Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace))
+    StringMapper.mapping(List(Two, Three, Four, Five, Six, Seven, Eight, Nine, Ten, Jack, Queen, King, Ace))
 
   def parseCardValue(valueString: String): Try[CardValue] =
-    Mapper.findValue(stringMappings)(valueString, CardValueMappingException(valueString))
+    StringMapper.findValue(stringMappings)(valueString, CardValueMappingException(valueString))
 }
 
 case object Two extends CardValue {
@@ -67,23 +63,23 @@ case object Ten extends CardValue {
 case object Jack extends CardValue {
   override def intValue = 11
 
-  override def toSymbol = "J"
+  override def key = "J"
 }
 
 case object Queen extends CardValue {
   override def intValue = 12
 
-  override def toSymbol = "Q"
+  override def key = "Q"
 }
 
 case object King extends CardValue {
   override def intValue = 13
 
-  override def toSymbol = "K"
+  override def key = "K"
 }
 
 case object Ace extends CardValue {
   override def intValue = 14
 
-  override def toSymbol = "A"
+  override def key = "A"
 }

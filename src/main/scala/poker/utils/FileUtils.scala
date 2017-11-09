@@ -1,4 +1,4 @@
-package utils
+package poker.utils
 
 import java.nio.ByteBuffer
 import java.nio.channels.{AsynchronousFileChannel, CompletionHandler}

@@ -1,5 +1,7 @@
-import cards.Card
-import exceptions.IncorrectNumberOfCardsException
+package poker.hand
+
+import poker.cards.Card
+import poker.exceptions.IncorrectNumberOfCardsException
 
 import scala.util.{Failure, Success, Try}
 
