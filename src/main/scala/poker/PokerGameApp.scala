@@ -8,6 +8,8 @@ import poker.utils.{FileUtils, InputParser}
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
+import scala.util.{Failure, Success}
+import scala.Console._
 
 object PokerGameApp
 {
@@ -17,7 +19,6 @@ object PokerGameApp
   {
     val inputFilePath = args.toList.headOption
       .map(Paths.get(_))
-      .filter(_.toFile.exists())
       .getOrElse(DEFAULT_INPUT_FILE_PATH)
 
     println(s"InputFile: ${inputFilePath.toAbsolutePath}")
@@ -29,8 +30,15 @@ object PokerGameApp
       }
       yield results
 
-    val results = Await.result(pokerGameResultFutures, 30 seconds)
+    pokerGameResultFutures.onComplete
+    {
+      case Success(results) =>
+        results.foreach(println)
 
-    results.foreach(println)
+      case Failure(throwable) =>
+        println(s"$RESET$RED$BOLD$throwable$RESET")
+    }
+
+    Await.ready(pokerGameResultFutures, 30 seconds)
   }
 }
