@@ -12,6 +12,7 @@ object InputParser
 {
   val PLAYER_DELIMITER = "  "
   val CARD_DELIMITER = " "
+  val NAME_CARDS_SEPARATOR = ":"
 
   def parseLine(line: String): Try[PokerGame] =
     line.split(PLAYER_DELIMITER).toList.map(parsePlayer) match
@@ -27,13 +28,13 @@ object InputParser
               }
             )
 
-        case _ => Failure(InputParseException(line))
+        case _ => Failure(InputParseException(s"""\"$line\" reason: Does NOT contain PLAYER_DELIMITER: \"$PLAYER_DELIMITER\""""))
       }
 
-  def parsePlayer(playerString: String): Try[Player] = playerString.split(":").toList match
+  def parsePlayer(playerString: String): Try[Player] = playerString.split(NAME_CARDS_SEPARATOR).toList match
     {
       case name :: cards :: Nil => parseCards(cards.trim).map(Player(name, _))
-      case _ => Failure(InputParseException(playerString))
+      case _ => Failure(InputParseException(s"""\"$playerString\" reason: Does NOT contain NAME_CARDS_SEPARATOR: \"$NAME_CARDS_SEPARATOR\" """))
     }
 
   def parseCards(cardsString: String): Try[PokerHand] = for
