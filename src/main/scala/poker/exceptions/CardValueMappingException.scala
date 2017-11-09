@@ -1,6 +1,6 @@
 package poker.exceptions
 
-case class CardValueMappingException(string: String) extends Exception
+case class CardValueMappingException(string: String) extends Exception with ConsoleError
 {
-  override def getMessage = s"""Unable to parse card value: \"$string\""""
+  override def getMessage = styleErrorMessage(s"""Unable to parse card value: \"$string\"""")
 }

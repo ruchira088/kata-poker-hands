@@ -12,7 +12,7 @@ object PokerGame
     val playerTwoSummary: PokerHandSummary = HighestRankingCards(pokerGame.player_2.pokerHand)
 
     def winnerDescription(playerName: String, pokerHandSummary: PokerHandSummary): String =
-      s"$playerName - ${pokerHandSummary.description}"
+      s"$playerName WINS - ${pokerHandSummary.ranking.description}"
 
     playerOneSummary.compare(playerTwoSummary) match
     {

@@ -5,8 +5,7 @@ import poker.cards.Card
 case class PokerHandSummary(
       cards: List[Card],
       tieBreaker: List[Card],
-      ranking: PokerHandRanking,
-      description: String
+      ranking: PokerHandRanking
 ) extends Ordered[PokerHandSummary]
 {
   override def compare(that: PokerHandSummary): Int =
@@ -18,6 +17,6 @@ case class PokerHandSummary(
 
 object PokerHandSummary
 {
-  def create(cards: List[Card])(tieBreaker: List[Card], ranking: PokerHandRanking, description: String): PokerHandSummary =
-    PokerHandSummary(cards, tieBreaker, ranking, description)
+  def create(cards: List[Card])(tieBreaker: List[Card], ranking: PokerHandRanking): PokerHandSummary =
+    PokerHandSummary(cards, tieBreaker, ranking)
 }

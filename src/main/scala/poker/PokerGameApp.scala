@@ -2,12 +2,13 @@ package poker
 
 import java.nio.file.{Path, Paths}
 
-import poker.game.PokerGame
-import poker.utils.{FileUtils, InputParser, ScalaUtils}
+import poker.game.PokerGame.getWinner
+import poker.utils.{FileUtils, InputParser}
 
-import scala.concurrent.{Await, Future}
-import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.duration._
+import scala.concurrent.{Await, Future}
+import scala.util.{Failure, Success}
 
 object PokerGameApp
 {
@@ -17,17 +18,18 @@ object PokerGameApp
   {
     val pokerGameResultFutures: Future[List[String]] = for
       {
-        gameStrings <- FileUtils.readFile(INPUT_FILE_PATH)
+        lines <- FileUtils.readFile(INPUT_FILE_PATH)
 
-        pokerGames <- Future.fromTry(ScalaUtils.sequence(gameStrings.map(InputParser.parseLine)))
+        results = lines.map(InputParser.parseLine)
+          .map {
+            case Success(pokerGame) => getWinner(pokerGame)
+            case Failure(exception) => exception.getMessage
+          }
+      }
+      yield results
 
-        results = pokerGames.map(PokerGame.getWinner)
+    val output = Await.result(pokerGameResultFutures, 30 seconds)
 
-      } yield results
-
-
-    val results = Await.result(pokerGameResultFutures, 30 seconds)
-
-    results.foreach(println)
+    output.foreach(println)
   }
 }
